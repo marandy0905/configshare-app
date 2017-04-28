@@ -1,0 +1,16 @@
+---
+AllCops:
+  TargetRubyVersion: 2.4
+
+Metrics/ModuleLength:
+  Exclude:
+    - "**/*_spec.rb"
+
+Metrics/BlockLength:
+  Exclude:
+    - "Rakefile"
+    - "**/*_spec.rb"
+
+Style/SymbolArray:
+  Exclude:
+    - "Rakefile"

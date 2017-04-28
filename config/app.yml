@@ -1,0 +1,9 @@
+---
+development:
+  API_URL: 'http://localhost:3000/api/v1'
+
+test:
+  API_URL: 'http://localhost:3000/api/v1'
+
+production:
+  API_URL: 'https://configshare-api.herokuapp.com/api/v1'
