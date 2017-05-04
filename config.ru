@@ -1,5 +1,4 @@
-Dir.glob('./{services,views,controllers}/init.rb').each do |file|
-  require file
-end
+# frozen_string_literal: true
 
+require './init.rb'
 run ShareConfigurationsApp
