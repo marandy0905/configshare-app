@@ -1,13 +1,34 @@
+/ doctype html
+/ html
+/   head
+/     title ConfigShare
+/     link rel='stylesheet' href='/style.css'
+/   body
+/     header
+/       h1 Config Share
+/     nav
+/       == slim :nav
+/     section
+/       == slim :flash_bar
+/       == yield
+
 doctype html
 html
   head
     title ConfigShare
+    
+    / Bootstrap CSS and theme (Cerulean Theme)
+    / link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.6/cerulean/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous"
+    link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.6/cerulean/bootstrap.min.css" rel="stylesheet"
+    / Custom CSS
     link rel='stylesheet' href='/style.css'
   body
-    header
-      h1 Config Share
-    nav
-      == slim :nav
-    section
-      == slim :flash_bar
-      == yield
+    / JQuery and Bootstrap JS
+    script src="https://code.jquery.com/jquery-1.12.4.min.js"
+    script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+
+    == slim :nav
+    div class='container' id='html_body'
+      section
+        == slim :flash_bar
+        == yield

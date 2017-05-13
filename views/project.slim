@@ -1,0 +1,49 @@
+h2
+  == "#{@project['name']}"
+
+dl
+  div class="row"
+    div class="col-xs-3"
+      dt Project Repository:
+    div class="col-xs-9"
+      dd class="blockquote"
+        a href="#{@project['repo_url']}" #{@project['repo_url']}
+
+div class="row"
+  div class="col-lg-9"
+    div class="row"
+      table class="table"
+        thead
+          tr
+            th File
+            th Description
+        tbody
+          - @project['configurations'].each do |config_file|
+            tr
+              td 
+                a href="/accounts/#{@current_account['username']}/projects/#{@project['id']}/configurations/#{config_file['id']}"
+                  == "#{config_file['attributes']['filename']}"
+              td #{config_file['attributes']['description']}
+    div class="row"
+      div class="col-xs-4"
+        button type="button" class="btn btn-success" data-toggle="modal" data-target="#newConfigurationModal" + New Configuration File
+    div class="row" style="height:10px;"
+  div class="col-lg-3"
+    div class="panel panel-default"
+      div class="panel-heading" Collaborators
+      div class="panel-body"
+        - if @project['contributors'].empty?
+          span class="small" There are no collaborators yet
+        ul class="list-group"
+          - @project['contributors'].each do |contributor|
+            li class="list-group-item clearfix"
+              '  #{contributor['username']}
+              - unless [@project['owner']['id'], @current_account['id']].include? contributor['id']
+                span class="pull-right"
+                  button type="button" class="btn btn-xs btn-default"
+                    span class="glyphicon glyphicon-remove"
+        - if @project['owner']['id'] == @current_account['id']
+          button type="button" class="btn btn-success" data-toggle="modal" data-target="#newCollaboratorModal" + Add Collaborator
+
+include :configuration_new_partial
+include :collaborator_new_partial
