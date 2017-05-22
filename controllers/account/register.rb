@@ -9,6 +9,13 @@ class ShareConfigurationsApp < Sinatra::Base
   end
 
   post '/account/register/?' do
+    registration = Registration.call(params)
+    if registration.failure?
+      flash[:error] = 'Please enter a valid username and email'
+      redirect 'account/register'
+      halt
+    end
+
     begin
       EmailRegistrationVerification.new(settings.config).call(
         username: params[:username],
@@ -33,15 +40,18 @@ class ShareConfigurationsApp < Sinatra::Base
   end
 
   post '/account/register/:token_secure/verify' do
-    redirect "/register/#{params[:token_secure]}/verify" if
-      (params[:password] != params[:password_confirm]) ||
-      params[:password].empty?
+    passwords = Passwords.call(params)
+    if passwords.failure?
+      flash[:error] = passwords.messages.values.join('; ')
+      redirect "/account/register/#{params[:token_secure]}/verify"
+      halt
+    end
 
     new_account = SecureMessage.decrypt(params[:token_secure])
     result = CreateVerifiedAccount.new(settings.config).call(
       username: new_account['username'],
       email: new_account['email'],
-      password: params['password']
+      password: passwords[:password]
     )
 
     if result

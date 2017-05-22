@@ -23,5 +23,6 @@ class GetProjectDetails
     { 'id' => project_data['id'], 'configurations' => config_files }
       .merge(project_data['attributes'])
       .merge(project_data['relationships'])
+      .merge('policies' => project_data['policies'])
   end
 end

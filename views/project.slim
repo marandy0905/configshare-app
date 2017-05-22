@@ -26,7 +26,8 @@ div class="row"
               td #{config_file['attributes']['description']}
     div class="row"
       div class="col-xs-4"
-        button type="button" class="btn btn-success" data-toggle="modal" data-target="#newConfigurationModal" + New Configuration File
+        - if @project['policies']['add_configuration']
+          button type="button" class="btn btn-success" data-toggle="modal" data-target="#newConfigurationModal" + New Configuration File
     div class="row" style="height:10px;"
   div class="col-lg-3"
     div class="panel panel-default"
@@ -35,15 +36,28 @@ div class="row"
         - if @project['contributors'].empty?
           span class="small" There are no collaborators yet
         ul class="list-group"
+          li class="list-group-item clearfix"
+            = @project['owner']['username']
           - @project['contributors'].each do |contributor|
             li class="list-group-item clearfix"
               '  #{contributor['username']}
-              - unless [@project['owner']['id'], @current_account['id']].include? contributor['id']
+              - if @project['policies']['remove_contributor']
                 span class="pull-right"
                   button type="button" class="btn btn-xs btn-default"
                     span class="glyphicon glyphicon-remove"
-        - if @project['owner']['id'] == @current_account['id']
+        - if @project['policies']['add_contributor']
           button type="button" class="btn btn-success" data-toggle="modal" data-target="#newCollaboratorModal" + Add Collaborator
 
 include :configuration_new_partial
 include :collaborator_new_partial
+
+.row
+  .text-center
+    - if @project['policies']['edit_project']
+      a href="" edit project
+    - if @project['policies']['delete_project']
+      == ' | '
+      a href="" delete project
+    - if @project['policies']['leave_project']
+      == ' | '
+      a href="" leave project

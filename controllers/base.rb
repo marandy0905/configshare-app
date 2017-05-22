@@ -2,6 +2,7 @@
 
 require 'econfig'
 require 'sinatra'
+require 'slim/include'
 require 'rack-flash'
 require 'rack/ssl-enforcer'
 require 'rack/session/redis'
@@ -31,9 +32,9 @@ class ShareConfigurationsApp < Sinatra::Base
 
   configure :development, :test do
     use Rack::Session::Pool, expire_after: ONE_MONTH
-  end
+  # end
 
-  configure :production do
+  # configure :production do
     use Rack::Session::Redis, expire_after: ONE_MONTH, redis_server: settings.config.REDIS_URL
   end
 
