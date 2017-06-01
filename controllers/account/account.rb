@@ -12,7 +12,15 @@ class ShareConfigurationsApp < Sinatra::Base
     current_session.set(:auth_token, @auth_token)
   end
 
+  def github_sso_url
+    gh_url = 'https://github.com/login/oauth/authorize'
+    client_id = settings.config.GH_CLIENT_ID
+    scope = 'user:email'
+    "#{gh_url}?client_id=#{client_id}&scope=#{scope}".tap {|u| puts u}
+  end
+
   get '/account/login/?' do
+    @gh_url = github_sso_url
     slim :login
   end
 
@@ -41,17 +49,25 @@ class ShareConfigurationsApp < Sinatra::Base
     @current_account = nil
     SecureSession.new(session).delete(:current_account)
     flash[:notice] = 'You have logged out - please login again to use this site'
-    slim :login
+    redirect '/account/login'
   end
 
-  get '/account/register/?' do
-    slim(:register)
+  get '/github_callback/?' do
+    begin
+      sso_account = FindAuthenticatedGithubAccount.new(settings.config)
+                                                  .call(params['code'])
+      authenticate_login(sso_account)
+      redirect "/account/#{@current_account['username']}/projects"
+    rescue => e
+      flash[:error] = 'Could not sign in using Github'
+      puts "RESCUE: #{e}"
+      redirect 'account/login'
+    end
   end
 
   get '/account/:username' do
     halt_if_incorrect_user(params)
 
-    # @auth_token = session[:auth_token]
     slim(:account)
   end
 end
