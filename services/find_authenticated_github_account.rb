@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'http'
 
 # Returns an authenticated user, or nil
@@ -21,9 +23,11 @@ class FindAuthenticatedGithubAccount
   end
 
   def get_sso_account_from_api(access_token)
+    message = { access_token: access_token }
     response = HTTP.headers(accept: 'application/json')
-                   .get("#{@config.API_URL}/github_account?access_token=#{access_token}")
-    puts "SSO: #{response.parse}"
+                   .post("#{@config.API_URL}/github_account",
+                         json: { data: message,
+                                 signature: SecureMessage.sign(message) })
     response.code == 200 ? response.parse : nil
   end
 end
