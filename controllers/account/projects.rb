@@ -9,7 +9,7 @@ class ShareConfigurationsApp < Sinatra::Base
                                       auth_token: @auth_token)
     end
 
-    @projects ? slim(:projects_all) : redirect('/accounts/login')
+    @projects ? slim(:projects_all) : redirect('/auth/login')
   end
 
   get '/account/:username/projects/:project_id/?' do
@@ -24,7 +24,7 @@ class ShareConfigurationsApp < Sinatra::Base
         redirect "/account/#{params[:username]}/projects"
       end
     else
-      redirect '/login'
+      redirect '/auth/login'
     end
   end
 
